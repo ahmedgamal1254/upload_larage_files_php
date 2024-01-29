@@ -31,10 +31,18 @@ class UploadLarageFile{
         foreach ($fileParts as $filePart) {
             $chunk = file_get_contents($filePart);    
             fwrite($finalFile, $chunk);
-            // unlink($filePart);  // Optionally delete the chunk
         }
 
         fclose($finalFile);
+    }
+
+    public function remove_chunk_folder(){
+        try{
+            rmdir($this->chunks);
+
+        }catch(Exception $e){
+
+        }
     }
 
     public function response(){
@@ -54,6 +62,7 @@ try{
     $upload->upload_chunks(); // send chunk file from request after resized it to parts 1mb
     // combine all parts into original extenstion 
     $upload->combine_all_chunks_and_create_file();
+    // $upload->remove_chunk_folder();
 
     echo $upload->response();
 }catch (Exception $e){

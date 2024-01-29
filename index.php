@@ -11,56 +11,9 @@
             align-items: center;
             flex-direction: column;
             background-color: #ffffff;
+    
             width:250px;
             height:250px;
-        }
-
-        @keyframes progress {
-            0% { --percentage: 0; }
-            100% { --percentage: var(--value); }
-        }
-
-        @property --percentage {
-            syntax: '<number>';
-            inherits: true;
-            initial-value: 0;
-        }
-
-        [role="progressbar"] {
-            --percentage: var(--value);
-            --primary: #369;
-            --secondary: #adf;
-            --size: 300px;
-            animation: progress 2s 0.5s forwards;
-            width: var(--size);
-            aspect-ratio: 1;
-            border-radius: 50%;
-            position: relative;
-            overflow: hidden;
-            display: grid;
-            place-items: center;
-        }
-
-        [role="progressbar"]::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: conic-gradient(var(--primary) calc(var(--percentage) * 1%), var(--secondary) 0);
-            mask: radial-gradient(white 55%, transparent 0);
-            mask-mode: alpha;
-            -webkit-mask: radial-gradient(#0000 55%, #000 0);
-            -webkit-mask-mode: alpha;
-        }
-
-        [role="progressbar"]::after {
-            counter-reset: percentage var(--value);
-            content: counter(percentage) '%';
-            font-family: Helvetica, Arial, sans-serif;
-            font-size: calc(var(--size) / 5);
-            color: var(--primary);
         }
 
         /* demo */
@@ -71,6 +24,22 @@
             height: 100vh;
             background: #f0f8ff;
         }
+
+        .container { 
+            background-color: rgb(192, 192, 192); 
+            width: 80%; 
+            border-radius: 15px; 
+        } 
+  
+        .skill { 
+            background-color: rgb(116, 194, 92); 
+            color: white; 
+            padding: 1%; 
+            text-align: right; 
+            font-size: 20px; 
+            border-radius: 15px; 
+        } 
+
     </style>
 </head>
 <body>
@@ -81,8 +50,10 @@
         </form>
     </div>
 
-    <div role="progressbar" id="progress" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" 
-    style="--value: 0"></div>
+    <div class="container"> 
+        <div class="skill php" id="progress" style="width:0%;">0%</div> 
+    </div> 
+
     <script>
         document.getElementById("form-upload").addEventListener("submit",function (e){
             e.preventDefault();
@@ -114,7 +85,8 @@
                     i++;
                     // Handle response
                     iter=(i/chunks.length) * 100
-                    document.getElementById("progress").style="--value:"+iter
+                    document.getElementById("progress").style.width=`${iter}%`
+                    document.getElementById("progress").innerHTML=`${iter}%`
                 }).catch(error => {
                     // Handle error
                 });
