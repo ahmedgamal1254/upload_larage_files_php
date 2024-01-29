@@ -5,18 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        body{
-            height:100vh;
-        }
         .control{
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             background-color: #ffffff;
-            box-shadow:#000000 1px 0 10px;
             width:250px;
             height:250px;
+        }
+
+        @keyframes progress {
+            0% { --percentage: 0; }
+            100% { --percentage: var(--value); }
+        }
+
+        @property --percentage {
+            syntax: '<number>';
+            inherits: true;
+            initial-value: 0;
+        }
+
+        [role="progressbar"] {
+            --percentage: var(--value);
+            --primary: #369;
+            --secondary: #adf;
+            --size: 300px;
+            animation: progress 2s 0.5s forwards;
+            width: var(--size);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+        }
+
+        [role="progressbar"]::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(var(--primary) calc(var(--percentage) * 1%), var(--secondary) 0);
+            mask: radial-gradient(white 55%, transparent 0);
+            mask-mode: alpha;
+            -webkit-mask: radial-gradient(#0000 55%, #000 0);
+            -webkit-mask-mode: alpha;
+        }
+
+        [role="progressbar"]::after {
+            counter-reset: percentage var(--value);
+            content: counter(percentage) '%';
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: calc(var(--size) / 5);
+            color: var(--primary);
+        }
+
+        /* demo */
+        body {
+            margin: 0;
+            display: grid;
+            place-items: center;
+            height: 100vh;
+            background: #f0f8ff;
         }
     </style>
 </head>
@@ -28,8 +81,8 @@
         </form>
     </div>
 
-    <progress id="progress" value="0" max="100"> 0% </progress>
-
+    <div role="progressbar" id="progress" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" 
+    style="--value: 0"></div>
     <script>
         document.getElementById("form-upload").addEventListener("submit",function (e){
             e.preventDefault();
@@ -61,9 +114,7 @@
                     i++;
                     // Handle response
                     iter=(i/chunks.length) * 100
-                    console.log(iter)
-                    document.getElementById("progress").value=iter
-
+                    document.getElementById("progress").style="--value:"+iter
                 }).catch(error => {
                     // Handle error
                 });
