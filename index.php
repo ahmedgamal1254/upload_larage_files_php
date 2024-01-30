@@ -58,12 +58,20 @@
         document.getElementById("form-upload").addEventListener("submit",function (e){
             e.preventDefault();
 
-            const CHUNK_SIZE = 1000000; // 1MB
-            let start = 0;
-            let end = CHUNK_SIZE;
+            let CHUNK_SIZE = (1*1000000) // 10 mb
             let chunks = [];
             let file = document.getElementById('video').files[0];
+            
+            let start=0;
+            let end=0;
 
+            if(file.size > (100*1000000)){
+                CHUNK_SIZE=(10*1000000)
+                end=CHUNK_SIZE
+            }else{
+                end=CHUNK_SIZE
+            }
+        
             while (start < file.size) {
                 let chunk = file.slice(start, end);
                 chunks.push(chunk);

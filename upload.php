@@ -7,8 +7,10 @@ class UploadLarageFile{
     protected $fileIndex='';
 
     public function __construct($request){
-        $this->fileName = $request['name']; // file name
-        $this->fileIndex = $request['index']; // request index
+        ini_set('memory_limit', '-1');
+
+        $this->fileName = isset($request['name']) ?$request['name']:$_FILES["file"]["name"]; // file name
+        $this->fileIndex = isset($request['index']) ?$request['index']:0; // request index
     }
 
     public function upload_chunks(){
@@ -38,8 +40,7 @@ class UploadLarageFile{
 
     public function remove_chunk_folder(){
         try{
-            rmdir($this->chunks);
-
+            unlink("$this->chunks/$this->fileName.part.*");
         }catch(Exception $e){
 
         }
